@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-int counter;
+int counter = 0;
 
 void pluscount(){
     counter++;
-    printf("counter : %d",counter);
+    printf("counter : %d\n",counter);
 }
 
 int getcount(){
@@ -16,7 +16,7 @@ void setcount(int val){
 
 int main(void){
     
-    printf("Hell wild Web Asm!!");
-
+    printf("Hell wild Web Asm!!\n");
+    pluscount();
     return 0;
 }
