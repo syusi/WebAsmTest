@@ -10,33 +10,27 @@
     <input type="button" id="count" value="count">
     <input type="button" name="reset" id="reset" value="reset">
     <script>
-        const importObject = {
-            module: {},
-            env: {
-                memory: new WebAssembly.Memory({ initial: 256 }),
-                table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' })
-            }
-            };
+        var importObject = { imports: { imported_func: arg => console.log(arg) } };
 
-        WebAssembly.instantiateStreaming(
-            fetch('test.wasm'),importObject).then(result => {
-                document.getElementById("count").addEventListener(
-                    'click',()=>{
-                        result.instance.exports.pluscount();
-                        var p = document.getElementById("print");
+        WebAssembly.compileStreaming(fetch('simple.wasm'))
+        .then(module => WebAssembly.instantiate(module, importObject))
+        .then(instance => {
+            document.getElementById("count").addEventListener(
+                'click',()=>{
+                    instance.exports.pluscount();
+                    var p = document.getElementById("print");
 
-                        p.innerText = result.instance.exports.getcount();
-                    },false
-                );
-                document.getElementById("reset").addEventListener(
-                    'click',()=>{
-                        result.instance.exports.setcount(0);
-                        var p = document.getElementById("print");
-                        p.innerText = result.instance.exports.getcount();
-                    },false
-                );
-            }
-        );
+                    p.innerText = result.instance.exports.getcount();
+                },false
+            );
+            document.getElementById("reset").addEventListener(
+                'click',()=>{
+                    instance.exports.setcount(0);
+                    var p = document.getElementById("print");
+                    p.innerText = result.instance.exports.getcount();
+                },false
+            );
+        });
     </script>
 </body>
 </html>
