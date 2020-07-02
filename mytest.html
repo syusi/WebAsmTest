@@ -10,8 +10,14 @@
     <input type="button" id="count" value="count">
     <input type="button" name="reset" id="reset" value="reset">
     <script>
-        var importObject = { imports: { imported_func: arg => console.log(arg) } };
-        
+        const importObj = {
+            module: {},
+            env: {
+                memory: new WebAssembly.Memory({ initial: 256 }),
+                table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' })
+            }
+            };
+
         WebAssembly.instantiateStreaming(
             fetch('test.wasm'),importObject).then(result => {
                 document.getElementById("count").addEventListener(
