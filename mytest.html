@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mytestDocument</title>
+</head>
+<body>
+    <p id="print"></p>
+    <input type="button" id="count" value="count">
+    <input type="button" name="reset" id="reset" value="reset">
+    <script>
+        var importObject = { imports: { imported_func: arg => console.log(arg) } };
+        
+        WebAssembly.instantiateStreaming(
+            fetch('test.wasm'),importObject).then(result => {
+                document.getElementById("count").addEventListener(
+                    'click',()=>{
+                        result.instance.exports.pluscount();
+                        var p = document.getElementById("print");
+
+                        p.innerText = result.instance.exports.getcount();
+                    },false
+                );
+                document.getElementById("reset").addEventListener(
+                    'click',()=>{
+                        result.instance.exports.setcount(0);
+                        var p = document.getElementById("print");
+                        p.innerText = result.instance.exports.getcount();
+                    },false
+                );
+            }
+        );
+    </script>
+</body>
+</html>
