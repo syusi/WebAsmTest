@@ -10,6 +10,9 @@
     <p id="print"></p>
     <input type="button" id="count" value="count">
     <input type="button" name="reset" id="reset" value="reset">
+    <div>fibo <input type="number" name="base" id="base">項目＝<p id="fibo"></p><input type="button" id="calc" value="asm計算">
+    <input type="button" id="calc" value="js計算" onclick="calcfibo()">
+    </div>
     <script>
         var importObject = {
             wasi_snapshot_preview1:{
@@ -19,7 +22,7 @@
                 fd_write : (a,b,c,d) => {console.log("a:"+a+"\nb:"+b+"\nc:"+c+"\nd:"+d);return 0},
             },
             env: {
-                memory: new WebAssembly.Memory({ initial: 512 }),
+                memory: new WebAssembly.Memory({ initial: 1024 }),
                 table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' }),
                 emscripten_resize_heap: arg => 0,
                 __handle_stack_overflow : () => console.log("overflow")
@@ -47,7 +50,28 @@
                     p.innerText = result;
                 },false
             );
+            document.getElementById("calc").addEventListener(
+                'click',()=>{
+                    let num = document.getElementById('base').value;
+                    let result = instance.exports._Z4fiboi(num);
+                    var p = document.getElementById("fibo");
+                    p.innerText = "wasm:"+result;
+                },false
+            );
         });
+
+        function calcfibo() {
+            let num = document.getElementById('base').value;
+            let result = fibo(num);
+            let p = document.getElementById("fibo");
+            p.innerText = "js:"+result;
+        }
+        function fibo(base) {
+            if (base <= 1) {
+                return base;
+            }
+            return fibo(base-1) + fibo(base-2);
+        }
     </script>
 </body>
 </html>
