@@ -12,6 +12,10 @@
     <script>
         var importObject = {
             wasi_snapshot_preview1:{},
+            env: {
+                memory: new WebAssembly.Memory({ initial: 256 }),
+                table: new WebAssembly.Table({ initial: 0, element: 'anyfunc' })
+            },
             imports: { imported_func: arg => console.log(arg) }
         };
 
