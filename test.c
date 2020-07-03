@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <emscripten.h>
 
 int counter = 0;
 
@@ -14,7 +15,7 @@ void setcount(int val){
     counter = val;
 }
 
-int main(void){
+int main(){
     
     printf("Hell wild Web Asm!!\n");
     pluscount();
