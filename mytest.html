@@ -10,7 +10,10 @@
     <input type="button" id="count" value="count">
     <input type="button" name="reset" id="reset" value="reset">
     <script>
-        var importObject = { imports: { imported_func: arg => console.log(arg) } };
+        var importObject = {
+            wasi_snapshot_preview1:{},
+            imports: { imported_func: arg => console.log(arg) }
+        };
 
         WebAssembly.compileStreaming(fetch('test.wasm'))
         .then(module => WebAssembly.instantiate(module, importObject))
